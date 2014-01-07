@@ -1,0 +1,2 @@
+class SyncedFolder
+end

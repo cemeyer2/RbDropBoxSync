@@ -1,0 +1,2 @@
+class DropBoxConnection
+end
