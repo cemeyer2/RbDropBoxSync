@@ -7,7 +7,7 @@ class RbDropBoxSyncedFolder
     end
     @file = File.new(@path)
     @dir = Dir.new(@path)
-    @status = :idle
+    @state = :unknown #valid states are :unknown :synchronized :unsynchronized :synchronizing
     @files = []
     @rb_synced_files = []
     @rb_synced_folders = []
@@ -26,32 +26,52 @@ class RbDropBoxSyncedFolder
     return @dir
   end
 
-  def get_status
-    return @status
+  def get_state
+    return @state
   end
 
-  def __set_status(status)
-    @status = status
+  def sync
+
+  end
+
+  def eql?(other)
+    return self.class == other.class && self.hash == other.hash
+  end
+
+  alias == eql?
+
+  def hash
+    return get_path.hash
+  end
+
+  private
+
+  def __set_state(state)
+    @state = state
   end
 
   def __enumerate
+    __set_state :synchronizing
     get_dir.map do |tpath|
-      __add_file(tpath)
+      __add_file tpath
     end
     @files.each do |file|
       if File.directory? file.to_path
         rbdir = RbDropBoxSyncedFolder.new file.to_path
         if not @rb_synced_folders.include? rbdir
+          __set_state :unsynchronized
           @rb_synced_folders << rbdir
         end
       end
       if File.file? file.to_path
         rbfile = RbDropBoxSyncedFile.new self, file.to_path
         if not @rb_synced_files.include? rbfile
+          __set_state :unsynchronized
           @rb_synced_files << rbfile
         end
       end
     end
+    __sync
   end
 
   def __add_file(path)
@@ -62,24 +82,18 @@ class RbDropBoxSyncedFolder
     if not File.exists? full_path then
       raise ArgumentError, "invalid file"
     end
-    file = File.new(full_path)
+    file = File.new full_path
     file.close
-    if not @files.include?(file) then
+    if not @files.include? file then
       @files << file
     end
   end
 
-  def sync
+  def __sync
+    __set_state :synchronizing
 
+    __set_state :synchronized
   end
 
-  def eql?(other)
-    return self.class != other.class && self.hash == other.hash
-  end
 
-  alias == eql?
-
-  def hash
-    return get_path.hash
-  end
 end

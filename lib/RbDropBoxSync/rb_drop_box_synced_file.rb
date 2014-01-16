@@ -3,7 +3,7 @@ class RbDropBoxSyncedFile
   def initialize(folder, path)
     @folder = folder
     @path = path
-    @state = :unknown
+    @state = :unknown #valid states are :unknown :synchronized :unsynchronized :synchronizing
   end
 
   def state
@@ -23,7 +23,7 @@ class RbDropBoxSyncedFile
   end
 
   def eql?(other)
-    return self.class != other.class && self.hash == other.hash
+    return self.class == other.class && self.hash == other.hash
   end
 
   alias == eql?
@@ -31,4 +31,11 @@ class RbDropBoxSyncedFile
   def hash
     return get_path.hash
   end
+
+  private
+
+  def __set_state(state)
+    @state = state
+  end
+
 end
