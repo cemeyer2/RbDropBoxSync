@@ -1,0 +1,2 @@
+class RbDropBoxSync
+end

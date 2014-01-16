@@ -1,2 +1,0 @@
-class DropBoxSync
-end

@@ -1,4 +1,4 @@
-class SyncedFile
+class RbDropBoxSyncedFile
 
   def initialize(folder, file)
     @folder = folder

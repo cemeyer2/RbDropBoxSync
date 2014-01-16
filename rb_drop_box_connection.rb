@@ -1,5 +1,5 @@
 require 'dropbox'
 require 'yaml'
 
-class DropBoxConnection
+class RbDropBoxConnection
 end
