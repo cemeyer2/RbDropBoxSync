@@ -45,6 +45,12 @@ class RbDropBoxSyncedFolder
           @rb_synced_folders << rbdir
         end
       end
+      if File.file? file.to_path
+        rbfile = RbDropBoxSyncedFile.new self, file.to_path
+        if not @rb_synced_files.include? rbfile
+          @rb_synced_files << rbfile
+        end
+      end
     end
   end
 
@@ -66,6 +72,14 @@ class RbDropBoxSyncedFolder
   def sync
 
   end
-end
 
-f = RbDropBoxSyncedFolder.new '~/opt'
+  def eql?(other)
+    return self.class != other.class && self.hash == other.hash
+  end
+
+  alias == eql?
+
+  def hash
+    return get_path.hash
+  end
+end
