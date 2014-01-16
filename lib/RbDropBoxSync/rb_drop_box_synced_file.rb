@@ -2,8 +2,8 @@ class RbDropBoxSyncedFile
 
   def initialize(folder, path)
     @folder = folder
-    @path = path
-    @state = :unknown #valid states are :unknown :synchronized :unsynchronized :synchronizing
+    @local_path = path
+    @state = :unknown #valid states are :unknown :synchronized :synchronizing :local_only :remote_only
   end
 
   def state
@@ -19,7 +19,7 @@ class RbDropBoxSyncedFile
   end
 
   def get_path
-    return @path
+    return @local_path
   end
 
   def eql?(other)

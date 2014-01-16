@@ -1,13 +1,14 @@
 class RbDropBoxSyncedFolder
 
-  def initialize(path)
-    @path = File.expand_path path
-    if not Dir.exists? @path then
+  def initialize(local_path, remote_path)
+    @local_path = File.expand_path local_path
+    @remote_path = remote_path
+    if not Dir.exists? @local_path then
       raise ArgumentError, "invalid directory"
     end
-    @file = File.new(@path)
-    @dir = Dir.new(@path)
-    @state = :unknown #valid states are :unknown :synchronized :unsynchronized :synchronizing
+    @file = File.new(@local_path)
+    @dir = Dir.new(@local_path)
+    @state = :unknown #valid states are :unknown :synchronized :synchronizing :local_only :remote_only
     @files = []
     @rb_synced_files = []
     @rb_synced_folders = []
@@ -15,7 +16,7 @@ class RbDropBoxSyncedFolder
   end
 
   def get_path
-    return @path
+    return @local_path
   end
 
   def get_file

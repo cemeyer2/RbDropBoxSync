@@ -1,9 +1,7 @@
 require 'dropbox_sdk'
-require 'yaml'
 
 class RbDropBoxConnection
   def initialize
-    config = YAML.load_file("/home/cemeyer/rbdbsconfig.yaml")
     #flow = DropboxOAuth2FlowNoRedirect.new('asdfasf', 'asdfasfd')
     ##url = flow.start() #need to do something to get code if we deploy this
     ##puts url
@@ -14,8 +12,8 @@ class RbDropBoxConnection
     #puts user_id
 
 
-    @client = DropboxClient.new(config['access_token'].strip())
+    @client = DropboxClient.new(RbDropBoxSync.get_config 'access_token')
     puts "linked account ", @client.account_info().inspect
-    p @client.media('/')
+    p @client.metadata('/')
   end
 end
